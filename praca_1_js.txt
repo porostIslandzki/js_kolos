@@ -1,0 +1,189 @@
+9, 10, 11, 12
+
+Zadanie 9
+
+Cyfry rzymskie są reprezentowane przez siedem różnych symboli: I, V, X, L, C, D i M. Podając liczbę rzymską, przekonwertuj ją na liczbę całkowitą.
+
+
+Przykład 1:
+
+Input: s = "III"
+Output: 3
+Przykład 2:
+
+Input: s = "LVIII"
+Output: 58
+Przykład 3:
+
+Input: s = "MCMXCIV"
+Output: 1994
+Założenia:
+
+1 <= s.length <= 15
+s zawiera wyłącznie znaki ('I', 'V', 'X', 'L', 'C', 'D', 'M').
+Zakładamy że s jest poprawną liczbą rzymską z zakresu [1, 3999].
+
+function romanToInt(s) {
+  const romanMap = {
+    'I': 1,
+    'V': 5,
+    'X': 10,
+    'L': 50,
+    'C': 100,
+    'D': 500,
+    'M': 1000
+  };
+
+  let wynik = 0;
+
+  for (let i = 0; i < s.length; i++) {
+    const curr = romanMap[s[i]];
+    const next = romanMap[s[i + 1]];
+
+    if (next > curr) {
+      wynik -= curr;
+    } else {
+      wynik += curr;
+    }
+  }
+
+  return wynik;
+}
+
+Zadanie 10
+
+Jako poszukiwacz przygód, doszedłeś do tajemniczej komnaty, na ścianie której znajduje się tajemniczy zapis:
+
+const arr = [
+	[ 66,  97, 114, 100,   4,   2, 110,  11,   1,   6,  20, ],
+	[ 99,   3,  10, 122,  76, 101, 111,   3,  32, 100,   0, ],
+	[  6,  22,   1, 111,  32,  10, 110,   7,  97,  97,  67, ],
+	[ 60,  97, 116,  32, 100,  23,  97, 114, 100,  32,  34, ],
+	[  2, 106,  15,   6, 111,  56,  80,  20,  10,  86,  10, ],
+	[ 20, 110,  121, 32, 107,  55,  50,  99, 110, 105,   8, ],
+	[ 12,   9,  22, 102,  66, 100,  12, 105,  50,  76, 110, ],
+	[ 42,  81, 123,  92,  26,  98,  20,   1,  20,  11,  10, ],
+]
+
+W starych notatkach znajdujesz tylko krótki ciąg, który ponoć wskazuje kierunek poruszania się po powyższym zapisie.
+
+
+
+const str = "rrrdddllddrrruuuurrddrruurddddlld";
+
+Twoim zadaniem jest zdekodować ukrytą informację. Dekodowanie rozpoczynasz w lewym górnym rogu, a następnie powinieneś się poruszać zgodnie z literami, gdzie r oznacza prawo, d dół, l lewo, a u górę.
+
+Po pobraniu kodów z odpowiednich miejsc zamień je na litery za pomocą String.fromCharCode(x). Wynikiem powinien być wypisane w konsoli hasło.
+
+const arr = [
+	[ 66,  97, 114, 100,   4,   2, 110,  11,   1,   6,  20, ],
+	[ 99,   3,  10, 122,  76, 101, 111,   3,  32, 100,   0, ],
+	[  6,  22,   1, 111,  32,  10, 110,   7,  97,  97,  67, ],
+	[ 60,  97, 116,  32, 100,  23,  97, 114, 100,  32,  34, ],
+	[  2, 106,  15,   6, 111,  56,  80,  20,  10,  86,  10, ],
+	[ 20, 110, 121, 32, 107,  55,  50,  99, 110, 105,   8, ],
+	[ 12,   9,  22, 102,  66, 100,  12, 105,  50,  76, 110, ],
+	[ 42,  81, 123,  92,  26,  98,  20,   1,  20,  11,  10, ],
+];
+
+const str = "rrrdddllddrrruuuurrddrruurddddlld";
+
+let x = 0, y = 0; 
+  let result = "";
+
+for (let i = 0; i < str.length; i++) {
+  const move = str[i];
+
+  if (move === 'r') x++;
+  else if (move === 'l') x--;
+  else if (move === 'd') y++;
+  else if (move === 'u') y--;
+
+  const val = arr[y][x];
+  result += String.fromCharCode(val);
+}
+
+console.log("Odszyfrowany tekst:", result);
+
+Zadanie 11
+
+Biorąc pod uwagę ciąg znaków s składającego się ze słów i spacji, napisz funkcję która zwraca długość ostatniego słowa w ciągu. Słowo jest maksymalnym podciągiem składającym się wyłącznie ze znaków innych niż spacje.
+
+Przykład 1:
+
+Input: s = "Hello World"
+Output: 5
+Przykład 2:
+
+Input: s = "   fly me   to   the moon  "
+Output: 4
+Założenia
+
+1 <= s.length <= 104
+s zawiera tylko znaki angielskiego alfabetu i spacje ' '.
+W s znajduje się co najmniej jedno słowo.
+
+function lengthOfLastWord(zdanie){
+  const words = zdanie.trim().split(" ");
+  return words[words.length - 1].length;
+}
+
+const test1 = "Hello World";
+const test2 = "fly me to   the moon    ";
+
+console.log(`"${test1}" → ${lengthOfLastWord(test1)}`);
+console.log(`"${test2}" → ${lengthOfLastWord(test2)}`); 
+
+Zadanie 12
+
+Wspinasz się po schodach. Dotarcie na szczyt zajmuje n kroków. Za każdym razem można pokonać 1 lub 2 stopnie. Na ile różnych sposobów można wspiąć się na szczyt?
+
+
+
+Przykład 1:
+
+
+
+Input: n = 2
+Output: 2
+Wyjaśnienie:
+
+1 stopień + 1 stopień
+2 stopnie
+Przykład 2:
+
+
+
+Input: n = 3
+Output: 3
+Wyjaśnienie:
+
+1 stopień + 1 stopień + 1 stopień
+1 stopień + 2 stopnie
+2 stopnie + 1 stopień
+Założenia:
+
+1 <= n <= 45
+
+function climbStairs(n) {
+  if(n === 1) return 1;
+  if(n===2) return 2;
+  
+  let a = 1;
+  let b = 2;
+  let wynik;
+  
+ for(let i =3; i<=n; i++) {
+   wynik = a + b;
+   a = b;
+   b = wynik;
+ }
+  return wynik;
+}
+
+console.log(`n = 5 → ${climbStairs(5)}`); 
+
+
+
+
+

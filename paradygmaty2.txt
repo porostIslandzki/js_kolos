@@ -1,0 +1,216 @@
+Zadanie 1
+
+Zapoznaj się ze sposobami tworzenia obiektów w Javascript https://kursjs.pl/kurs/obiekty/obiekty. Stwórz obiekt currentUser. Obiekt niech ma właściwości: name, surname, email, www, userType, isActive oraz metodę show(), która wypisze wszystkie te właściwości w konsoli. Dodatkowo stwórz metodę setActive(active), która przestawi właściwość isActive na przekazaną wartość, która może być true/false.
+
+const currentUser = {
+  name: "Jan",
+  surname: "Kowalski",
+  email: "jan.kowalski@example.com",
+  www: "https://example.com",
+  userType: "admin",
+  isActive: true,
+
+  show: function() {
+    console.log("Imię:", this.name);
+    console.log("Nazwisko:", this.surname);
+    console.log("Email:", this.email);
+    console.log("WWW:", this.www);
+    console.log("Typ użytkownika:", this.userType);
+    console.log("Aktywny:", this.isActive);
+  },
+
+  setActive: function(active) {
+    this.isActive = active;
+  }
+};
+
+currentUser.show();
+// → wypisuje wszystkie dane
+
+currentUser.setActive(false);
+currentUser.show();
+// → teraz "Aktywny: false"
+
+this wskazuje na sam obiekt (currentUser).
+
+show() wypisuje wszystkie pola w konsoli.
+
+setActive(active) zmienia flagę aktywności.
+
+Zadanie 2
+
+Zapoznaj się ze sposobami tworzenia klas w Javascript https://kursjs.pl/kurs/obiekty/class. Stwórz klasę book, który będzie miała:
+
+
+
+Właściwości:
+
+users która będzie tablicą użytkowników (na początku pusta)
+Metody:
+
+addUser(name, age, phone)
+
+która doda to tablicy users nowy obiekt, który będzie miał klucze: name, age, phone z przekazanymi do tej funkcji danymi
+
+showUsers()
+
+która po odpaleniu wypisze w konsoli tekst: Wszyscy użytkownicy w książce a następnie w pętli wypisze wszystkich użytkowników
+
+findByName(name)
+
+która wypisze w konsoli pierwszego użytkownika, który ma szukane imię lub false jeżeli nie znajdzie.
+
+findByPhone(phone)
+
+która wypisze w konsoli pierwszego użytkownika, który ma szukany telefon lub false jeżeli nie znajdzie
+
+getCount()
+
+która wypisze ile jest użytkowników w tabeli
+
+class Book {
+  constructor() {
+    this.users = []; // pusty rejestr użytkowników
+  }
+
+  addUser(name, age, phone) {
+    this.users.push({ name, age, phone });
+  }
+
+  showUsers() {
+    console.log("Wszyscy użytkownicy w książce:");
+    this.users.forEach((user, index) => {
+      console.log(`${index + 1}. Imię: ${user.name}, Wiek: ${user.age}, Telefon: ${user.phone}`);
+    });
+  }
+
+  findByName(name) {
+    const found = this.users.find(user => user.name === name);
+    if (found) {
+      console.log("Znaleziony użytkownik:", found);
+    } else {
+      console.log(false);
+    }
+  }
+
+  findByPhone(phone) {
+    const found = this.users.find(user => user.phone === phone);
+    if (found) {
+      console.log("Znaleziony użytkownik:", found);
+    } else {
+      console.log(false);
+    }
+  }
+
+  getCount() {
+    console.log("Liczba użytkowników:", this.users.length);
+  }
+}
+
+
+const mojaKsiazka = new Book();
+
+mojaKsiazka.addUser("Anna", 28, "123-456-789");
+mojaKsiazka.addUser("Piotr", 34, "987-654-321");
+mojaKsiazka.addUser("Anna", 21, "000-111-222");
+
+mojaKsiazka.showUsers();
+// → wypisze wszystkich użytkowników
+
+mojaKsiazka.findByName("Anna");
+// → wypisze pierwszą Annę
+
+mojaKsiazka.findByPhone("987-654-321");
+// → wypisze Piotra
+
+mojaKsiazka.getCount();
+// → wypisze 3
+
+Zadanie 3
+
+Stwórz obiekt o nazwie text. Obiekt ten powinien mieć metody:
+
+check(txt, word)
+
+która zwraca true/false jeżeli w tekście txt znajduje się szukane słowo word
+
+check("ala ma kota", "kota") ---> true
+getCount(txt)
+
+Zwraca liczbę liter w tekście txt. Uwaga znaki interpunkcyjne też traktujmy jako litery
+
+getCount("ala ma kota") ---> 11
+getWordsCount(txt)
+
+zwraca liczbę słów w przekazanym tekście
+
+getWordsCount("Ala ma kota") ---> 3
+setCapitalize(txt)
+
+zwraca nowy tekst tak zamieniony, że każde słowo zaczyna się z dużej litery
+
+setCapitalize("ala ma kota") ---> "Ala Ma Kota"
+setMix(txt)
+
+zwraca nowy tekst z naprzemiennie dużymi/małymi literami. Spację i znaki interpunkcyjne traktujemy jako litery.
+
+setMix("ala ma kota") ---> "aLa mA KoTa"
+generateRandom(lng)
+
+Generuje tekst o długości lng, który składa się z losowych liter
+
+generateRandom(10) ---> "dkjiuhtjox"
+
+const text = {
+  check: function(txt, word) {
+    return txt.includes(word);
+  },
+
+  getCount: function(txt) {
+    return txt.length; // liczy wszystkie znaki (spacje, interpunkcja też)
+  },
+
+  getWordsCount: function(txt) {
+    return txt.trim().split(/\s+/).length;
+  },
+
+  setCapitalize: function(txt) {
+    return txt
+      .split(" ")
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(" ");
+  },
+
+  setMix: function(txt) {
+    let result = "";
+    for (let i = 0; i < txt.length; i++) {
+      result += i % 2 === 0
+        ? txt[i].toLowerCase()
+        : txt[i].toUpperCase();
+    }
+    return result;
+  },
+
+  generateRandom: function(lng) {
+    let result = "";
+    const letters = "abcdefghijklmnopqrstuvwxyz";
+    for (let i = 0; i < lng; i++) {
+      const index = Math.floor(Math.random() * letters.length);
+      result += letters[index];
+    }
+    return result;
+  }
+};
+
+console.log(text.check("ala ma kota", "kota"));         
+console.log(text.getCount("ala ma kota"));               
+console.log(text.getWordsCount("   Ala ma kota   "));    
+console.log(text.setCapitalize("ala ma kota"));          
+console.log(text.setMix("ala ma kota"));                 
+console.log(text.generateRandom(10));                    
+
+
+
+
+
+

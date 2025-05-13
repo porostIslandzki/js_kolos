@@ -1,0 +1,74 @@
+
+Zadanie 4
+
+Zapoznaj się z informacjami o dziedziczeniu prototypowym w Javascript.
+
+
+a) Jak się to ma do działania obiektów i “klas” w Javascript? Dlaczego mówimy, że w Javascript klasy są tzw. “syntax sugar”? Opisz mechanizm własnymi słowami.
+
+
+
+b) Rozbuduj obiekty typu String dodając im metodę mirror(), która po odpaleniu dla tekstu zwróci jego odbicie:
+
+"Ala ma kota".mirror() === "atok am alA
+
+a) W JavaScript nie ma klas takich jak w Javie czy c++. Zamiast tego wszystko opiera się na prototypach - czyli obiektach, które mogą przekazywać właściwości innym obiektom. Każdy obiekt ma ukryte pole [[Prototype]], które prowadzi do innego obiektu, i tak tworzy się lancuch prototypow (prototype chain). Klasy w JavaScript to tylko ladniejszy zapis dla tego, co robiliśmy wcześniej przez funkcje konstruktory i prototypy.
+
+b) String.prototype.mirror = function() {
+  return this.split("").reverse().join("");
+}
+
+Zadanie 5
+
+Zapoznaj się z informacjami o tzw. domknięciach (ang. clousures) w JavaScript.
+
+
+
+a) Opisz mechanizm własnymi słowami.
+
+
+
+b) Stwórz funkcję createCounter, która zwraca funkcję inkrementującą licznik. Funkcja zwrócona przez createCounter powinna:
+
+Zwiększać wartość licznika o 1 przy każdym wywołaniu,
+Zwracać bieżącą wartość licznika po każdej inkrementacji.
+Dodatkowo funkcja createCounter powinna działać tak, że za każdym razem, gdy wywołujesz createCounter, tworzysz nowy licznik, który ma swoją własną odrębną wartość, niezależną od innych liczników. Użyj w tym celu mechanizmu domknięć.
+
+
+
+Przykład:
+
+
+
+const counter1 = createCounter();
+console.log(counter1()); // 1
+console.log(counter1()); // 2
+console.log(counter1()); // 3
+
+const counter2 = createCounter();
+console.log(counter2()); // 1
+console.log(counter2()); // 2
+
+
+a) domknięcie to sytuacja, w której funkcja zapamiętuje swoje otoczenie - czyli zmienne, które były w chwili jej utworzenia, nawet jeśli ta zewnetrzna funkcja się skonczyla. Czyli funkcja wewnetrzna moze korzystać z danych funkcji zewnętrznej, bo zamyka je w sobie i trzyma w pamięci.
+
+function createCounter() {
+  let count = 0;   
+return function() {
+    count += 1;
+    return count;
+  };
+}
+
+const counter1 = createCounter();
+console.log(counter1()); 
+console.log(counter1()); 
+console.log(counter1());
+
+const counter2 = createCounter();
+console.log(counter2()); 
+console.log(counter2()); 
+
+
+
+

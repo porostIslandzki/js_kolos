@@ -1,0 +1,240 @@
+-> 10 == "10" //true 
+Podwójny znak równości porównuje wartości, olewając typy danych
+-> 10 === "10" //false
+Potrójny znak równości, porównuje zarówno wartość, jak i typ
+
+Zadanie 2
+Zapoznaj się z typami zmiennych w Javascript: https://kursjs.pl/kurs/super-podstawy/zmienne
+
+a) Opisz różnicę między let / const / var.
+
+b) Z jakiego rodzaju typowania korzysta Javascript?
+
+a) let:
+zasięg: blokowy (działa tylko w obrębie {})
+możliwość zmiany wartości: TAK
+hoisting: tak, ale bez inicjalizacji - zmienna jest "tymczasowo niedostępna" przed deklaracją
+Przykład:
+
+let x = 5;
+x = 10; //OK
+
+const:
+zasięg blokowy, tak samo jak let
+możliwość zmiany wartości: NIE - musi być przypisana od razu i nie można jej zmienić
+
+const y = 10;
+y = 15; //BLAD
+
+var z = 20;
+z = 25 //OK
+
+b) typ zmiennej może się zmieniać w trakcie działania programu. Nie musisz z gory okreslac czy to string, number, czy cos innego
+
+let x = 10;
+x = "dziesięć" //teraz można przelaczyc na string i JavaScript ma to gdzies
+
+JavaScript automatycznie konwertuje typy podczas operacji 
+
+console.log("5" + 1);   // "51" – bo string + number → string
+console.log("5" - 1);   // 4 – bo string - number → liczba
+console.log(1 == "1");  // true – bo robi konwersję typu
+
+Zadanie 3
+Zapoznaj się ze sposobami konstruowania funkcji: https://kursjs.pl/kurs/super-podstawy/funkcje. Napisz funkcję printNumbers(nr), która wymagać będzie liczby. Funkcja powinna zwrócić tekst, który będzie składał się z kolejnych liczb.
+
+function printNumbers(nr) {
+  let wynik = "";
+
+  for (let i = 1; i <= nr; i++) {
+    wynik += i;
+    if (i < nr) {
+      wynik += " ";
+    }
+  }
+
+  return wynik;
+}
+
+// Przykład użycia
+console.log(printNumbers(5));  // "1 2 3 4 5"
+
+
+-> tworzysz pusty tekst wynik
+-> petla for leci od 1 do nr
+-> dodajesz liczby do tekstu
+-> na końcu zwracasz caly ciag
+
+
+Zadanie 4
+
+Stwórz funkcję generateRandom(min, max), która będzie przyjmować dwie wartości - min i max. Funkcja powinna zwrócić losową liczbę z podanego przedziału. Do generowania losowej liczby możesz użyć wzoru Math.floor(Math.random()*(max-min+1)+min).
+
+Wykorzystaj ją do utworzenia 10 liczb z przedziału 1 - 20. Jeżeli połowa z nich będzie większa od 10, wypisz tekst udało się, w przeciwnym razie wypisz w konsoli tekst niestety nie.
+
+function generateRandom(min, max) {
+  return Math.floor(Math.random() * (max - min + 1) + min);
+}
+
+let liczby = [];
+let wiekszeOd10 = 0;
+
+for (let i = 0; i < 10; i++) {
+  let liczba = generateRandom(1, 20);
+  liczby.push(liczba);
+  if (liczba > 10) {
+    wiekszeOd10++;
+  }
+}
+
+console.log("Wygenerowane liczby:", liczby.join(", "));
+
+if (wiekszeOd10 >= 5) {
+  console.log("Udało się");
+} else {
+  console.log("Niestety nie");
+}
+
+-> Generujemy 10 liczb z przedziału 1–20 za pomocą generateRandom.
+
+-> Liczymy, ile z nich jest większych niż 10.
+
+-> Jeśli co najmniej połowa (czyli 5 lub więcej) to „sukces”.
+
+-> W przeciwnym razie: życiowy dramat.
+
+Zadanie 5
+
+function checkPalindrom(txt) {
+  const cleanTxt = txt.toLowerCase(); // ignorujemy wielkość liter
+  const reversed = cleanTxt.split("").reverse().join(""); // odwracamy tekst
+
+  return cleanTxt === reversed; // sprawdzamy, czy oryginał i odwrócony są takie same
+}
+
+console.log(checkPalindrom("kajak"));     // true
+console.log(checkPalindrom("Anna"));      // true
+console.log(checkPalindrom("JavaScript"));// false
+console.log(checkPalindrom("12321"));     // true
+console.log(checkPalindrom("xdxd"));      // false
+
+Zadanie 6
+
+Zapoznaj się ze sposobami działania na tablicach: https://kursjs.pl/kurs/super-podstawy/tablice. Stwórz funkcję random(max), która będzie zwracać losową liczbę z zakresu 0 - max. Wykorzystaj tą funkcję do wygenerowania 20-elementowej tablicy. Posortuj tą tablicę, a następnie wypisz sumę oraz średnią wszystkich liczb z tej tablicy.
+
+function random(max) {
+  return Math.floor(Math.random() * (max + 1));
+}
+
+let tablica = [];
+
+for (let i = 0; i < 20; i++) {
+  tablica.push(random(100));
+}
+
+tablica.sort(function(a, b) {
+  return a - b;
+});
+
+let suma = 0;
+
+for (let i = 0; i < tablica.length; i++) {
+  suma += tablica[i];
+}
+
+let srednia = suma / tablica.length;
+
+console.log("Tablica:", tablica.join(", "));
+console.log("Suma:", suma);
+console.log("Średnia:", srednia);
+
+Zadanie 7
+
+Biorąc pod uwagę tablicę liczb całkowitych nums posortowaną w porządku niemalejącym, usuń duplikaty w miejscu, tak aby każdy unikalny element pojawił się tylko raz. Względna kolejność elementów powinna pozostać taka sama. Następnie zwróć liczbę unikalnych elementów w nums.
+
+Rozważmy, że liczba unikalnych elementów numswynosi k, aby uzyskać akceptację, należy wykonać następujące czynności:
+
+Zmienić tablicę numsw taki sposób, aby pierwsze k elementów nums zawierało unikalne elementy w kolejności, w jakiej były one początkowo obecne w nums. Pozostałe elementy nums nie mają znaczenia, podobnie jak rozmiar nums.
+Zwraca k.
+Przykład:
+
+Input: nums = [1,1,2]
+Output: 2, nums = [1,2,_]
+Wyjaśnienie: Twoja funkcja powinna zwrócić k = 2, przy czym pierwsze dwa elementy nums to odpowiednio 1 i 2. Nie ma znaczenia, co pozostawisz poza zwróconym k (dlatego są to podkreślenia).
+
+function removeDuplicates(nums) {
+  if (nums.length === 0) return 0;
+
+  let k = 1; // wskaźnik na miejsce do wpisania nowej unikalnej wartości
+
+  for (let i = 1; i < nums.length; i++) {
+    if (nums[i] !== nums[i - 1]) {
+      nums[k] = nums[i]; // nadpisujemy duplikat nową wartością
+      k++;
+    }
+  }
+
+  return k;
+}
+
+
+let nums = [1, 1, 2];
+let k = removeDuplicates(nums);
+
+console.log("k =", k);                 // 👉 2
+console.log("nums =", nums.slice(0, k)); // 👉 [1, 2]
+
+Zadanie 8
+
+Napisz funkcję znajdującą najdłuższy wspólny ciąg prefiksów w tablicy ciągów. Jeśli nie ma wspólnego prefiksu, zwróć pusty ciąg.
+
+
+
+Przykład 1:
+
+Input: strs = ["flower","flow","flight"]
+Output: "fl"
+Przykład 2:
+
+Input: strs = ["dog","racecar","car"]
+Output: ""
+Założenia:
+
+1 <= strs.length <= 200
+0 <= strs[i].length <= 200
+strs[i] składa się tylko z małych angielskich liter.
+
+function longestCommonPrefix(strs) {
+  if (!strs.length) return "";
+
+  let prefix = strs[0];
+
+  for (let i = 1; i < strs.length; i++) {
+    while (strs[i].indexOf(prefix) !== 0) {
+      prefix = prefix.slice(0, -1); // ucinamy ostatni znak
+      if (prefix === "") return "";
+    }
+  }
+
+  return prefix;
+}
+
+console.log(longestCommonPrefix(["flower", "flow", "flight"])); // 👉 "fl"
+console.log(longestCommonPrefix(["dog", "racecar", "car"]));    // 👉 ""
+console.log(longestCommonPrefix([""]));                         // 👉 ""
+console.log(longestCommonPrefix(["same", "same", "same"]));     // 👉 "same"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
