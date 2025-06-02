@@ -1,0 +1,54 @@
+%1 
+mezczyzna(tomasz).
+mezczyzna(krzysztof).
+mezczyzna(piotr).
+kobieta(anna).
+kobieta(agnieszka).
+%2 
+osoba(tomasz, stolarz, 55).
+osoba(krzysztof, pilkarz, 25).
+osoba(krzysztof, rzeznik, 25).
+osoba(piotr, zlodziej, 25).
+osoba(anna, chirurg, 39).
+%%% 
+romans_(X,Y) :- romans(X,Y).
+romans_(X,Y) :- romans(Y,X).
+rany_(X,Y) :- obrazenia(X,Y).
+rany_(X,Y) :- obrazenia(Y,X).
+%3 
+romans(anna, piotr).
+romans(anna, krzysztof).
+romans(agnieszka, piotr).
+romans(agnieszka, tomasz).
+%4 
+ofiara(agnieszka).
+zgonprzez(agnieszka, kij).
+znajdowalosie(krew, tomasz). 
+znajdowalosie(krew, agnieszka).
+znajdowalosie(bloto, krzysztof).
+znajdowalosie(czekolada, piotr).
+znajdowalosie(krew, anna).
+%5 
+przysobie(tomasz, proteza).
+przysobie(piotr, rewolwer).
+obrazenia(kij, proteza).
+obrazenia(nogaStolu, kij).
+obrazenia(nozyczki, noz).
+obrazenia(buty, kij).
+%6 
+korelacja(X, buty) :- osoba(X, pilkarz, _).
+korelacja(X, nozyczki) :- osoba(X, chirurg, _).
+korelacja(X, Y) :- przysobie(X, Y).
+%%%morderca/1
+%7 
+morderca(X) :- korelacja(X, Y), rany_(Y, Z), zgonprzez(agnieszka, Z).
+motyw(X, zazdrosc) :- romans_(X, agnieszka), mezczyzna(X).
+motyw(X, zazdrosc) :- mezczyzna(Y), romans_(Y, agnieszka), romans_(Y, X), kobieta(X).
+motyw(X, pieniadze) :- mezczyzna(X), osoba(X, zlodziej, _).
+%8 
+podejrzany(X) :- morderca(X), motyw(X, _), znajdowalosie(Y, X), znajdowalosie(Y, agnieszka).
+
+
+
+
+

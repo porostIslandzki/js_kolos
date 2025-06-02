@@ -1,0 +1,272 @@
+Zadanie 1
+
+Uruchom podane przykłady:
+
+a)
+
+main :: IO ()
+main = do
+  let x = takeWhile (<50) (map kw [0..])
+  print(x)
+
+kw :: Integer -> Integer
+kw x = x*x
+
+🧠 CO SIĘ TU DZIEJE:
+[0..] to nieskończona lista liczb naturalnych
+
+map kw [0..] przekształca ją na [0*0, 1*1, 2*2, ...] → [0,1,4,9,16,25,36,49,64,81,...]
+
+takeWhile (<50) zatrzymuje przetwarzanie w momencie, gdy pierwszy element nie spełni warunku (czyli 64 ≥ 50)
+
+
+b)
+main :: IO ()
+main = do
+  let y = kw (snd ([1..],5))
+  print(y)
+
+kw :: Integer -> Integer
+kw x = x*x
+
+🧠 CO SIĘ TU DZIEJE:
+[1..] to znowu nieskończona lista
+
+[1..], 5 to para (nieskończona lista, liczba 5)
+
+snd wyciąga drugą wartość z pary, czyli 5
+
+kw 5 = 25
+
+Zadanie 2
+
+Uruchom poniższy przykład:
+
+data Tree a = EmptyTree | Node a (Tree a) (Tree a)
+emptyTree :: Tree Int 
+emptyTree = EmptyTree 
+
+singleNode :: Tree Int 
+singleNode = Node 5 EmptyTree EmptyTree 
+
+exampleTree :: Tree Int
+exampleTree = Node 10 (Node 5 EmptyTree EmptyTree) (Node 15 (Node 12 EmptyTree EmptyTree) EmptyTree)
+
+sumTree :: Num a => Tree a -> a 
+sumTree EmptyTree = 0 
+sumTree (Node value left right) = value + sumTree left + sumTree right
+
+main :: IO ()
+main = do
+  print(sumTree exampleTree)
+Opisz działanie typów rekurencyjnych w Haskelu.
+
+
+Tree a to typ drzewa z wartosciami typu a.
+Moze byc: EmptyTree - pusty
+Node a left right - z wartoscia a i dwoma poddrzewami left, right
+
+sumTree:
+Jak działa?
+
+Jeśli drzewo jest puste – zwróć 0 (to jest baza rekurencji)
+
+Jeśli to Node, to:
+
+dodaj value (czyli wartość tego węzła),
+
+dodaj sumę lewej gałęzi (sumTree left),
+
+dodaj sumę prawej (sumTree right)
+
+Zadanie 3
+
+Napisz funkcję, która pobiera listę i zwraca tę samą listę z elementami w odwróconej kolejności, nie korzystając z gotowej funkcji reverse.
+
+myReverse :: [a] -> [a]
+myReverse [] = []
+myReverse (x:xs) = myReverse xs ++ [x]
+
+Zadanie 4
+
+Skorzystaj z mechanizmu składania list w celu utworzenia tabliczki mnożenia. Tabela powinna być listą złożoną z trójelementowych krotek. Pierwsze dwa elementy to liczby z zakresu 1..12, a trzeci to ich iloczyn.
+
+multiplicationTable :: [(Int, Int, Int)]
+multiplicationTable = [ (x, y, x * y) | x <- [1..12], y <- [1..12] ]
+main :: IO ()
+main = do
+  putStrLn "Tabliczka mnożenia (1 do 12):"
+  mapM_ print multiplicationTable
+
+
+Zadanie 5
+Napisz funkcję, która generuje dwuelementowe krotki z wszystkimi możliwymi kombinacjami dwóch kolorów ze zbioru {black, white, blue, yellow, red}. Wyeliminuj wyniki typu (red,red) oraz powtórzenia typu (red, yellow) - (yellow, red).
+
+-- Lista kolorów
+colors :: [String]
+colors = ["black", "white", "blue", "yellow", "red"]
+
+-- Generowanie unikalnych par kolorów bez powtórzeń i duplikatów
+uniqueColorPairs :: [(String, String)]
+uniqueColorPairs = [ (c1, c2) | (i, c1) <- indexedColors, (j, c2) <- indexedColors, i < j ]
+  where
+    indexedColors = zip [0..] colors
+    -- Dodajemy indeksy do kolorów, żeby móc porównywać kolejność i wykluczyć (c2, c1)
+
+-- Funkcja main wypisuje wynik
+main :: IO ()
+main = do
+  putStrLn "Unikalne kombinacje dwóch kolorów:"
+  mapM_ print uniqueColorPairs
+
+
+Zadanie 6
+
+Napisz następujące funkcje dla list:
+
+a) append l m , która konkatenuje listy l i m,
+
+append :: [a] -> [a] -> [a]
+append [] ys = ys
+append (x:xs) ys = x : append xs ys
+
+b) member x l , która sprawdza, czy x jest elementem listy l,
+member :: Eq a => a -> [a] -> Bool
+member _ [] = False
+member x (y:ys)
+  | x == y    = True
+  | otherwise = member x ys
+
+c) last l, która znajduje ostatni element w liście,
+last :: [a] -> a
+last [] = error "Lista jest pusta – nie ma ostatniego elementu"
+last [x] = x
+last (_:xs) = last xs
+
+
+d) delete x l, która skasuje element x z listy l
+delete :: Eq a => a -> [a] -> [a]
+delete _ [] = []
+delete x (y:ys)
+  | x == y    = ys           -- trafiliśmy: pomijamy ten element
+  | otherwise = y : delete x ys  -- nie trafiliśmy: zostawiamy i szukamy dalej
+
+
+e) split x l , która podzieli listę l do dwóch list l1 i l2. l1 zawiera elementy mniejsze niż x a l2 elementy większe niż x.
+-- Funkcja split: dzieli listę na elementy mniejsze i większe od x
+split :: Ord a => a -> [a] -> ([a], [a])
+split _ [] = ([], [])
+split x (y:ys)
+  | y < x     = (y : l1, l2)
+  | y > x     = (l1, y : l2)
+  | otherwise = (l1, l2)
+  where
+    (l1, l2) = split x ys
+
+-- Funkcja main testuje split na różnych danych
+main :: IO ()
+main = do
+  putStrLn "Test 1:"
+  print (split 5 [1, 7, 3, 5, 8, 2, 5, 0, 10])
+  -- ([1,3,2,0],[7,8,10])
+
+  putStrLn "Test 2:"
+  print (split 4 [4, 4, 4])
+  -- ([],[])
+
+  putStrLn "Test 3:"
+  print (split 0 [1, 2, 3])
+  -- ([],[1,2,3])
+
+  putStrLn "Test 4:"
+  print (split 10 [20, 5, 10, 1])
+  -- ([5,1],[20])
+
+
+Zadanie 7
+
+Napisz funkcję filter p l, której wartością zwracaną jest lista wszystkich elementów listy l , które spełnią predykat p. Jaki ma typ funkcja filter?
+filter :: (a -> Bool) -> [a] -> [a]
+filter _ [] = []
+filter p (x:xs)
+  | p x       = x : filter p xs
+  | otherwise = filter p xs
+
+Zadanie 8
+
+Napisz funkcję onlyEven, która przyjmuje listę liczb całkowitych i zwraca listę zawierającą tylko liczby parzyste.
+onlyEven :: [Int] -> [Int]
+onlyEven xs = [x | x <- xs, even x]
+main :: IO ()
+main = do
+  putStrLn "Liczby parzyste z listy:"
+  print (onlyEven [1..10])         -- [2,4,6,8,10]
+  print (onlyEven [5,7,9])         -- []
+  print (onlyEven [2,4,6,8,10])    -- [2,4,6,8,10]
+
+-- Funkcja onlyEven: zwraca tylko liczby parzyste
+onlyEven :: [Int] -> [Int]
+onlyEven xs = [x | x <- xs, even x]
+
+-- Alternatywa z filter:
+-- onlyEven = filter even
+
+-- Przykładowe testy
+main :: IO ()
+main = do
+  putStrLn "Liczby parzyste z listy:"
+  print (onlyEven [1..10])
+  print (onlyEven [5,7,9])
+  print (onlyEven [2,4,6,8,10])
+
+Zadanie 9
+
+Napisz funkcję doubleAll, która przyjmuje listę liczb całkowitych i zwraca listę, w której każda liczba jest podwojona.
+
+doubleAll :: [Int] -> [Int]
+doubleAll xs = [x * 2 | x <- xs]
+
+-- Funkcja doubleAll: podwaja każdą liczbę w liście
+doubleAll :: [Int] -> [Int]
+doubleAll xs = [x * 2 | x <- xs]
+
+-- Alternatywa:
+-- doubleAll = map (*2)
+
+-- Przykładowe testy
+main :: IO ()
+main = do
+  putStrLn "Podwajanie wszystkich liczb:"
+  print (doubleAll [1, 2, 3])
+  print (doubleAll [0, -1, 10])
+  print (doubleAll [])
+
+Zadanie 10
+
+Napisz funkcję sumOfDigits, która dla danej liczby całkowitej zwróci sumę jej cyfr.
+
+import Data.Char (digitToInt)
+
+-- Funkcja sumująca cyfry liczby
+sumOfDigits :: Integer -> Int
+sumOfDigits n = sum $ map digitToInt $ show $ abs n
+
+-- Przykładowe testy
+main :: IO ()
+main = do
+  print (sumOfDigits 1234)     -- 10
+  print (sumOfDigits (-567))   -- 18
+  print (sumOfDigits 0)        -- 0
+
+
+
+
+
+
+
+
+
+
+
+
+

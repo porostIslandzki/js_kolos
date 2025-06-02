@@ -1,0 +1,62 @@
+4, 5, 6, 7, 8
+Zadanie 4
+
+Zaimplementuj funkcję obliczającą silnię.
+
+factorial :: (Eq a, Num a) => a -> a
+factorial 0 = 1                           
+factorial n = n * factorial (n - 1)       
+
+main :: IO ()
+main = do
+  print (factorial 0)    
+  print (factorial 5)    
+  print (factorial 10)   
+
+Zadanie 5
+
+Napisz funkcję wyznaczającą kolejne wyrazy ciągu Fibonacciego.
+
+fibonacci :: (Eq a, Num a, Num p) => a -> p
+fibonacci 0 = 0
+fibonacci 1 = 1
+fibonacci n = fibonacci (n - 1) + fibonacci (n - 2)
+
+Zadanie 6
+
+Napisz funkcję, która pobiera trzy liczby i zwraca różnicę między największą i najmniejszą liczbą.
+
+>>> minmax 7 1 4
+6
+
+minmax :: (Ord a, Num a) => a -> a -> a -> a
+minmax x y z = maximum [x, y, z] - minimum [x, y, z]
+
+
+Zadanie 7
+
+Zaimplementuj funkcję, która pobiera dwie liczby i znajduje sumę ich kwadratów.
+
+
+>>> sumOfSquares 3 4
+25
+
+sumOfSquares :: Num a => a -> a -> a
+sumOfSquares x y = x * x + y * y
+
+
+
+Zadanie 8
+
+Zaimplementuj funkcję zwracającą ostatnią cyfrę danej liczby.
+
+lastDigit :: Integral a => a -> a
+lastDigit n = abs n `mod` 10
+
+
+>>> lastDigit 42
+2
+>>> lastDigit (-17)
+7
+
+

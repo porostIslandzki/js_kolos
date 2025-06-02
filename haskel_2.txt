@@ -1,0 +1,39 @@
+6e, 7, 8, 9, 10
+
+6e)
+split :: Ord a => a -> [a] -> ([a], [a])
+split x l = (filter (< x) l, filter (> x) l)
+
+7)
+
+filter :: (a -> Bool) -> [a] -> [a]
+filter _ [] = []
+filter p (x:xs)
+  | p x       = x : filter p xs
+  | otherwise = filter p xs
+typ: przyjmuje liczbe typu a I zwraca Bool True/False
+
+8)
+onlyEven :: [Int] -> [Int]
+onlyEven [] = []
+onlyEven (x:xs)
+  | even x    = x : onlyEven xs
+  | otherwise = onlyEven xs
+
+9)
+doubleAll :: Num a => [a] -> [a]
+doubleAll = map (*2)
+
+main :: IO ()
+main = do
+  putStrLn "Podwajanie liczb w listach:"
+  print (doubleAll [1, 2, 3, 4])     -- [2, 4, 6, 8]
+  print (doubleAll [])              -- []
+  print (doubleAll [-1, 0, 5, 10])  -- [-2, 0, 10, 20]
+
+
+10)
+sumOfDigits :: Integral a => a -> a
+sumOfDigits n = sum (map (fromIntegral . digitToInt) (show (abs n)))
+  where
+    digitToInt c = fromEnum c - fromEnum '0'
