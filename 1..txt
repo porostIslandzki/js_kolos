@@ -1,0 +1,483 @@
+1. 
+Zadanie 1
+
+Skompiluj poniższy program:
+
+
+
+rodzice(uranus, gaia, rhea).
+rodzice(uranus, gaia, cronus).
+rodzice(cronus, rhea, zeus).
+rodzice(cronus, rhea, hera).
+rodzice(cronus, rhea, demeter).
+rodzice(zeus, leto, artemis).
+rodzice(zeus, leto, apollo).
+rodzice(zeus, demeter, persephone).
+
+ojciec(X, Y) :- rodzice(X, _, Y).
+matka(X, Y) :- rodzice(_, X, Y).
+
+rodzic(X, Y) :- ojciec(X, Y); matka(X, Y).
+
+dziadek(X, Z) :- ojciec(X, Y), rodzic(Y, Z).
+babcia(X, Z) :- matka(X, Y), rodzic(Y, Z).
+rodzic(X, zeus).
+
+
+Zadanie 2
+
+Napisz program w Prologu, który pozwoli na pokolorowanie pięciu sąsiadujących ze sobą województw (Podkarpackie, Lubelskie, Mazowieckie, Podlaskie i Warmińsko-Mazurskie), w taki sposób, aby województwa które są sąsiadami, nie posiadały tego samego koloru. Użyj w tym celu tylko trzech kolorów.
+
+2. % Możliwe kolory
+kolor(czerwony).
+kolor(zielony).
+kolor(niebieski).
+
+% Sąsiedztwa między województwami
+sasiedzi(podkarpackie, lubelskie).
+sasiedzi(lubelskie, mazowieckie).
+sasiedzi(mazowieckie, podlaskie).
+sasiedzi(podlaskie, warminsko_mazurskie).
+sasiedzi(mazowieckie, warminsko_mazurskie).
+sasiedzi(lubelskie, podlaskie).
+
+% Funkcja do sprawdzenia czy kolory się różnią
+rozne(A, B) :- A \= B.
+
+% Główne wywołanie
+koloruj(Wojewodztwa) :-
+    kolor(Podkarpackie),
+    kolor(Lubelskie),
+    kolor(Mazowieckie),
+    kolor(Podlaskie),
+    kolor(Warminsko),
+    
+    rozne(Podkarpackie, Lubelskie),
+    rozne(Lubelskie, Mazowieckie),
+    rozne(Mazowieckie, Podlaskie),
+    rozne(Podlaskie, Warminsko),
+    rozne(Mazowieckie, Warminsko),
+    rozne(Lubelskie, Podlaskie),
+    
+    Wojewodztwa = [
+        podkarpackie-Podkarpackie,
+        lubelskie-Lubelskie,
+        mazowieckie-Mazowieckie,
+        podlaskie-Podlaskie,
+        warminsko_mazurskie-Warminsko
+    ].
+
+?- koloruj(W).
+
+Zadanie 3
+
+Napisz program obliczający największy wspólny dzielnik dwóch dodatnich liczb całkowitych nww(X, Y, Nww) za pomocą algorytmu Euklidesa z odejmowaniem wg algorytmu zapisanego imperatywnie:
+
+Zadanie 3
+
+Napisz program obliczający największy wspólny dzielnik dwóch dodatnich liczb całkowitych nww(X, Y, Nww) za pomocą algorytmu Euklidesa z odejmowaniem wg algorytmu zapisanego imperatywnie:
+
+
+
+function nww(x, y)
+	while x ≠ y do
+		if x > y then x := x – y
+		else y := y – x
+	return x
+
+nwd(X, Y, Nwd) :-
+    X = Y,
+    Nwd = X.
+
+nwd(X, Y, Nwd) :-
+    X > Y,
+    X1 is X - Y,
+    nwd(X1, Y, Nwd).
+
+nwd(X, Y, Nwd) :-
+    Y > X,
+    Y1 is Y - X,
+    nwd(X, Y1, Nwd).
+
+
+
+Zadanie 4
+
+Fabryka produkuje kilka różnych produktów, nazwijmy je p1, p2 i p3. Produkty są produkowane ze składników, które nazwijmy s1, s2, s3 i s4. Zbuduj prologową bazę danych, która będzie przechowywała następujące informacje:
+
+a) opis każdego produktu, wyszczególniający które składniki są potrzebne do jego produkcji (na ogół produkt nie wymaga użycia wszystkich składników).
+
+b) spis dostępnych w tej chwili składników.
+
+
+
+Następnie zdefiniuj dwie relacje:
+
+a) moznaprodukowac(X) — stwierdzająca, że fabryka posiada wszystkie składniki potrzebne do wyprodukowania produktu X.
+
+b) potrzebuje(X, Y) — stwierdzająca, że produkt X potrzebuje składnika Y.
+
+Całość należy zaprogramować nie używając bezpośrednio list.
+
+Proszę bardzo, oto **kompletna wersja programu w Prologu** dla Zadania 4:
+
+---
+
+### 🔧 **Baza danych: produkty, składniki i dostępność**
+
+```prolog
+% Składniki potrzebne do produkcji danego produktu
+skladnik(p1, s1).
+skladnik(p1, s2).
+
+skladnik(p2, s2).
+skladnik(p2, s3).
+
+skladnik(p3, s1).
+skladnik(p3, s3).
+skladnik(p3, s4).
+
+% Składniki dostępne w magazynie
+dostepny(s1).
+dostepny(s2).
+dostepny(s3).
+```
+
+---
+
+### 📌 **Relacja: potrzebuje(X, Y)**
+
+```prolog
+% Produkt X potrzebuje składnika Y
+potrzebuje(X, Y) :- 
+    skladnik(X, Y).
+```
+
+---
+
+### 🏭 **Relacja: moznaprodukowac(X)**
+
+```prolog
+% Produkt X można produkować, jeśli wszystkie wymagane składniki są dostępne
+moznaprodukowac(X) :-
+    \+ (skladnik(X, S), \+ dostepny(S)).
+```
+
+---
+
+### ✅ **Przykładowe użycie**
+
+```prolog
+?- potrzebuje(p2, Y).
+Y = s2 ;
+Y = s3.
+
+?- moznaprodukowac(p1).
+true.
+
+?- moznaprodukowac(p3).
+false.
+```
+
+---
+
+Jeśli chcesz dodać nowy składnik dynamicznie, możesz użyć:
+
+```prolog
+assertz(dostepny(s4)).
+```
+
+A potem:
+
+```prolog
+?- moznaprodukowac(p3).
+true.
+```
+
+Zadanie 5
+
+Wykonaj polecenia:
+
+
+
+?- append([olej], [woda], [olej, woda]).
+
+?- append([olej], [woda], Co).
+
+?- append([olej], Co, [olej, woda]).
+Jakie zastosowania ma instrukcja append?
+
+
+Ooo, `append/3` w Prologu to jak szwajcarski scyzoryk do list – działa w **każdą stronę** i robi za wszystko: sklejanie, dzielenie, sprawdzanie, generowanie. Zaraz Ci rozbiję te zapytania na czynniki pierwsze jak blender filozofa.
+
+---
+
+### 📌 `append/3` – ogólna składnia
+
+```prolog
+append(Lista1, Lista2, Wynik).
+```
+
+Znaczy to:
+**`Lista1` doklejona do `Lista2` daje `Wynik`**
+
+I teraz:
+
+---
+
+### 🔎 Zapytania z zadania
+
+#### 1. `?- append([olej], [woda], [olej, woda]).`
+
+Prolog sprawdza:
+
+> Czy `[olej] ++ [woda] == [olej, woda]`?
+> Odpowiedź: **tak**, więc zwróci:
+
+```prolog
+true.
+```
+
+---
+
+#### 2. `?- append([olej], [woda], Co).`
+
+Tu Prolog szuka listy `Co`, która powstaje przez sklejenie `[olej]` i `[woda]`.
+
+Daje:
+
+```prolog
+Co = [olej, woda].
+```
+
+---
+
+#### 3. `?- append([olej], Co, [olej, woda]).`
+
+Tutaj Prolog próbuje rozdzielić `[olej, woda]`, tak aby zaczynała się od `[olej]`, a reszta to `Co`.
+
+Daje:
+
+```prolog
+Co = [woda].
+```
+
+---
+
+### 💡 Do czego służy `append/3`?
+
+#### 🔨 Praktyczne zastosowania:
+
+1. **Sklejanie list**
+
+   ```prolog
+   append([a, b], [c, d], X). % X = [a, b, c, d]
+   ```
+
+2. **Dzielenie listy** (na prefix i suffix)
+
+   ```prolog
+   append(X, Y, [a, b, c]). % znajdź wszystkie sposoby rozdziału
+   ```
+
+3. **Wstawianie elementu do listy**
+   (np. między `L1` i `L2` wstawiasz `X`)
+
+   ```prolog
+   append(L1, L2, [a, b, c]),
+   append(L1, [X|T], L2).
+   ```
+
+4. **Sprawdzanie, czy lista zawiera podlistę**
+   (np. czy `[a, b]` występuje gdzieś w `[x, a, b, y]`)
+
+   ```prolog
+   append(_, [a, b | _], [x, a, b, y]). % true
+   ```
+
+5. **Backtrackingowe generowanie kombinacji podziałów**
+   Prolog może podać wszystkie możliwe sposoby podzielenia listy!
+
+---
+
+### 🤯 Podsumowanie:
+
+`append/3` to:
+
+* **uniwersalne narzędzie do pracy z listami**
+* działa **zarówno do budowania, jak i analizowania**
+* pozwala na **rekurencyjne operacje na listach**
+* i jest wykorzystywana **w wielu algorytmach** (np. sortowanie, przeszukiwanie, permutacje)
+
+Chcesz przykład, jak za pomocą `append` zrobić `member/2`, `reverse/2` albo `delete/3`? To dawaj, rozkminimy wszystko.
+
+
+Zadanie 6
+
+Wykonaj polecenia:
+
+
+
+?- select(X,[1,2,3],L).
+?- select(a,L,[1,2,3]).
+Jakie zastosowanie ma instrukcja select?
+
+
+
+Okej, `select/3` w Prologu to taka mała, sprytna funkcja do **wyciągania, wstawiania i testowania obecności** elementów w liście. Przyjrzyjmy się tym zapytaniom i rozłożymy `select` jak cebulę – warstwa po warstwie, z łzami radości w oczach.
+
+---
+
+### 📌 Ogólna forma
+
+```prolog
+select(X, Lista, ListaBezX).
+```
+
+Znaczy to:
+
+> **Z listy `Lista` wybierz element `X`, a reszta to `ListaBezX`**
+
+Albo:
+
+> **Dodaj `X` do `ListaBezX`, a otrzymasz `Lista`**
+
+Działa **w obie strony** – to klasyczne prologowe „wszystko da się odwrócić”.
+
+---
+
+### 🔍 Polecenia
+
+#### 1. `?- select(X, [1,2,3], L).`
+
+To znaczy:
+
+> "Znajdź element `X` w liście `[1,2,3]`, i podaj, co zostaje z listy po jego usunięciu."
+
+##### Wyniki:
+
+```prolog
+X = 1, L = [2,3] ;
+X = 2, L = [1,3] ;
+X = 3, L = [1,2] ;
+false.
+```
+
+**Prolog backtrackuje** i znajduje wszystkie możliwości usunięcia pojedynczego elementu.
+
+---
+
+#### 2. `?- select(a, L, [1,2,3]).`
+
+To znaczy:
+
+> "Do jakiej listy `L` muszę wstawić `a`, żeby powstało `[1,2,3]`?"
+
+##### Wyniki:
+
+```prolog
+L = [a,1,2,3] ;
+L = [1,a,2,3] ;
+L = [1,2,a,3] ;
+L = [1,2,3,a] ;
+false.
+```
+
+Czyli Prolog znajduje **wszystkie miejsca**, gdzie `a` można wsadzić, żeby po jego usunięciu wrócić do `[1,2,3]`.
+
+---
+
+### 💡 Zastosowania `select/3`
+
+#### 🔧 Do czego się przydaje?
+
+1. **Usuwanie elementu z listy**
+
+   ```prolog
+   select(2, [1,2,3], X).  % X = [1,3]
+   ```
+
+2. **Wstawianie elementu w dowolne miejsce**
+
+   ```prolog
+   select(a, L, [1,2,3]).  % L = [1,a,2,3] itd.
+   ```
+
+3. **Permutacje!**
+   Używa się go rekurencyjnie w definicji permutacji listy:
+
+   ```prolog
+   perm([], []).
+   perm(L, [H|T]) :- select(H, L, R), perm(R, T).
+   ```
+
+4. **Backtracking wyboru elementu**
+   Można go użyć do **wybrania jednego elementu z listy** i wykonania na nim operacji, zostawiając resztę do dalszej obróbki.
+
+5. **Rozwiązywanie problemów kombinatorycznych** (np. szachy, sudoku, sortowanie, znajdowanie ruchów itd.)
+
+---
+
+### 🧠 Podsumowanie
+
+`select/3` to:
+
+* narzędzie do **manipulacji listą**
+* wspiera **usuwanie, dodawanie, testowanie, generowanie**
+* jest **dwukierunkowe**
+* idealne do pisania **rekurencyjnych algorytmów na permutacjach, wyborach, itp.**
+
+Chcesz przykład działania permutacji na bazie `select/3`? Albo jak napisać `delete/3` lub `insert/3`? Dawaj, rozsmarujemy to po logice jak masło po toście.
+
+
+
+Zadanie 7
+
+Zdefiniuj predykat należy(X, Lista), który sprawdza, czy element X należy do listy Lista. Na przykład należy(a, [a, b, c]). powinno zwrócić true.
+
+nalezy(X, [X|_]).
+nalezy(X, [_|T]) :-
+    nalezy(X, T).
+
+Zadanie 8
+
+Zdefiniuj predykat długość(Lista, Dł), który oblicza długość listy Lista i zapisuje ją w Dł.
+
+dlugosc([], 0).
+dlugosc([_|T], D) :-
+    dlugosc(T, D1),
+    D is D1 + 1.
+
+
+Zadanie 9
+
+Napisz predykat suma(Lista, S), który oblicza sumę wszystkich elementów w liście Lista i zapisuje wynik w S.
+
+suma([], 0).
+suma([H|T], S) :-
+    suma(T, S1),
+    S is H + S1.
+
+
+Zadanie 10
+
+Zdefiniuj predykat ostatni(X, Lista), który jest prawdziwy, jeśli X jest ostatnim elementem listy Lista.
+ostatni(X, [X]).
+ostatni(X, [_|T]) :-
+    ostatni(X, T).
+
+Zadanie 11
+
+Zdefiniuj predykat odwróć(Lista, Odwrocona), który zwraca listę w odwrotnej kolejności. Na przykład odwróć([1,2,3], X) powinno zwrócić X = [3,2,1].
+
+odwroc([], []).
+odwroc([H|T], Odwrocona) :-
+    odwroc(T, R),
+    append(R, [H], Odwrocona).
+
+
+
+
+
+
+
